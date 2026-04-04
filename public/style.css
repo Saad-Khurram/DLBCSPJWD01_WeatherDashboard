@@ -1,0 +1,229 @@
+/* ---------- RESET ---------- */
+* {
+  box-sizing: border-box;
+}
+
+/* ---------- PAGE BACKGROUND & CENTERING ---------- */
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;                    /* center page */
+  justify-content: center;          /* horizontal center */
+  align-items: center;              /* vertical center */
+  font-family: "Poppins", sans-serif;
+  color: #f5f5f5;
+
+  background: radial-gradient(circle at top left, #3b82f6 0, #111827 45%, #020617 100%);
+}
+
+/* ---------- MAIN CONTAINER ---------- */
+.container {
+  width: 100%;
+  max-width: 1100px;
+  padding: 0 24px;
+}
+
+/* ---------- PAGE TITLE ---------- */
+.app-title {
+  margin-bottom: 28px;
+  font-size: 32px;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* ---------- MAIN LAYOUT (LEFT: WEATHER, RIGHT: FAVORITES) ---------- */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1.2fr);
+  gap: 32px;
+  align-items: start;
+}
+
+/* ---------- SEARCH BAR ---------- */
+.search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+
+.search input {
+  flex: 1;
+  padding: 12px 16px;
+  font-size: 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(2, 8, 22, 0.9);
+  color: #ffffff;
+  outline: none;
+}
+
+.search input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.search button {
+  padding: 12px 22px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #3b82f6, #22c55e);
+}
+
+/* ---------- WEATHER CARD ---------- */
+.card {
+  margin-top: 18px;
+  padding: 18px 20px;
+  min-height: 100px;
+
+  background: rgba(15, 23, 42, 0.85);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.placeholder {
+  opacity: 0.7;
+  font-size: 0.95rem;
+}
+
+/* ---------- ADD TO FAVORITES BUTTON ---------- */
+.actions {
+  margin-top: 14px;
+}
+
+#favBtn {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(15, 23, 42, 0.9);
+  color: #fff;
+  cursor: pointer;
+}
+
+/* ---------- FAVORITES SECTION ---------- */
+.right h2 {
+  margin: 0 0 12px 0;
+  font-size: 20px;
+}
+
+.favorites-box {
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(15, 23, 42, 0.8);
+  padding: 12px 14px;
+  min-height: 80px;
+}
+
+/* FAVORITES LIST */
+#favList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#favList li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+#favList .link {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  text-decoration: underline;
+  font-size: 0.9rem;
+}
+
+#favList .remove {
+  background: transparent;
+  color: #fff;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 2px 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+#favList li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 6px;
+  padding: 6px 10px;
+  
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 20px;
+}
+
+#favList .link {
+  font-size: 0.95rem;
+  text-decoration: none;
+  color: #3b82f6;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+#favList .link:hover {
+  text-decoration: underline;
+}
+
+#favList .remove {
+  border: none;
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+#favList .remove:hover {
+  background: rgba(239, 68, 68, 0.35);
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 780px) {
+  body {
+    align-items: flex-start; /* avoid too much top empty space */
+    padding-top: 40px;
+  }
+
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .app-title {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+}
+
+.hidden {
+  display: none;
+}
+
+.suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 4px;
+
+  background: rgba(15, 23, 42, 0.98);
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  max-height: 180px;
+  overflow-y: auto;
+  font-size: 14px;
+  z-index: 20;
+}
