@@ -7,17 +7,61 @@
 body {
   margin: 0;
   min-height: 100vh;
-  display: flex;                    /* center page */
-  justify-content: center;          /* horizontal center */
-  align-items: center;              /* vertical center */
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-family: "Poppins", sans-serif;
   color: #f5f5f5;
+  background: #020617;
+  overflow-x: hidden;
+}
 
-  background: radial-gradient(circle at top left, #3b82f6 0, #111827 45%, #020617 100%);
+/* Aurora background blobs */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.45;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::before {
+  width: 600px;
+  height: 600px;
+  top: -120px;
+  left: -100px;
+  background: radial-gradient(circle, #3b82f6 0%, #6366f1 60%, transparent 100%);
+  animation: drift1 14s ease-in-out infinite alternate;
+}
+
+body::after {
+  width: 500px;
+  height: 500px;
+  bottom: -100px;
+  right: -80px;
+  background: radial-gradient(circle, #0ea5e9 0%, #22d3ee 50%, transparent 100%);
+  animation: drift2 18s ease-in-out infinite alternate;
+}
+
+@keyframes drift1 {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(60px, 40px) scale(1.1); }
+  100% { transform: translate(20px, 80px) scale(0.95); }
+}
+
+@keyframes drift2 {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(-50px, -30px) scale(1.05); }
+  100% { transform: translate(-80px, 20px) scale(1.1); }
 }
 
 /* ---------- MAIN CONTAINER ---------- */
 .container {
+  position: relative;
+  z-index: 1;
   width: 100%;
   max-width: 1100px;
   padding: 0 24px;
@@ -75,12 +119,125 @@ body {
 /* ---------- WEATHER CARD ---------- */
 .card {
   margin-top: 18px;
-  padding: 18px 20px;
+  padding: 24px;
   min-height: 100px;
 
   background: rgba(15, 23, 42, 0.85);
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.card-loaded {
+  animation: fadeIn 0.35s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Dynamic accent borders per weather condition */
+.accent-clear   { border-color: rgba(251, 191, 36, 0.5);  box-shadow: 0 0 24px rgba(251, 191, 36, 0.12); }
+.accent-rain    { border-color: rgba(59, 130, 246, 0.6);   box-shadow: 0 0 24px rgba(59, 130, 246, 0.15); }
+.accent-storm   { border-color: rgba(139, 92, 246, 0.6);   box-shadow: 0 0 24px rgba(139, 92, 246, 0.15); }
+.accent-snow    { border-color: rgba(226, 232, 240, 0.6);  box-shadow: 0 0 24px rgba(226, 232, 240, 0.12); }
+.accent-mist    { border-color: rgba(148, 163, 184, 0.4);  box-shadow: 0 0 16px rgba(148, 163, 184, 0.1); }
+.accent-clouds  { border-color: rgba(100, 116, 139, 0.45); box-shadow: 0 0 16px rgba(100, 116, 139, 0.1); }
+
+/* Card inner layout */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.card-city {
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.card-condition {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85rem;
+  opacity: 0.8;
+  text-align: right;
+  flex-direction: column;
+}
+
+.weather-icon {
+  width: 56px;
+  height: 56px;
+  margin: -8px -8px -8px 0;
+  filter: drop-shadow(0 0 6px rgba(255,255,255,0.15));
+}
+
+.card-temp-hero {
+  font-size: 72px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -2px;
+  margin: 4px 0 0 0;
+}
+
+.card-temp-unit {
+  font-size: 32px;
+  font-weight: 400;
+  opacity: 0.7;
+  vertical-align: super;
+}
+
+.card-feels-like {
+  font-size: 0.85rem;
+  opacity: 0.6;
+  margin: 6px 0 20px 0;
+}
+
+.card-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.stat-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.5;
+}
+
+.stat-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+/* Loading spinner */
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(255,255,255,0.1);
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin: 24px auto;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 .placeholder {

@@ -86,6 +86,11 @@ async function getWeather() {
     return;
   }
 
+  // Show loading state
+  resultEl.className = "card";
+  resultEl.innerHTML = `<div class="loading-spinner"></div>`;
+  showFavButton(false);
+
   try {
     const res = await fetch(`/weather/${encodeURIComponent(city)}`);
     const data = await res.json();
@@ -97,14 +102,58 @@ async function getWeather() {
     }
 
     lastSearchedCity = data.name;
+
+    // Map weather condition to accent class for dynamic card theming
+    const conditionMap = {
+      Clear: "accent-clear",
+      Clouds: "accent-clouds",
+      Rain: "accent-rain",
+      Drizzle: "accent-rain",
+      Thunderstorm: "accent-storm",
+      Snow: "accent-snow",
+      Mist: "accent-mist",
+      Fog: "accent-mist",
+      Haze: "accent-mist",
+    };
+    const accentClass = conditionMap[data.weather[0].main] || "accent-clouds";
+
+    // Remove previous accent classes and apply new one
+    resultEl.className = `card ${accentClass} card-loaded`;
+
+    const iconCode = data.weather[0].icon;
+    const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+    const country = data.sys?.country ? `, ${data.sys.country}` : "";
+    const feelsLike = Math.round(data.main.feels_like);
+    const tempMin = Math.round(data.main.temp_min);
+    const tempMax = Math.round(data.main.temp_max);
+    const description = data.weather[0].description;
+
     resultEl.innerHTML = `
-      <h2>${data.name}</h2>
-      <p>${data.weather[0].description}</p>
-      <p>
-        🌡️ ${Math.round(data.main.temp)}°C |
-        💧 ${data.main.humidity}% |
-        💨 ${data.wind.speed} m/s
-      </p>
+      <div class="card-header">
+        <div class="card-city">${data.name}${country}</div>
+        <div class="card-condition">
+          <img class="weather-icon" src="${iconUrl}" alt="${description}" />
+          <span>${description}</span>
+        </div>
+      </div>
+      <div class="card-temp-hero">
+        ${Math.round(data.main.temp)}<span class="card-temp-unit">°C</span>
+      </div>
+      <div class="card-feels-like">Feels like ${feelsLike}°C</div>
+      <div class="card-stats">
+        <div class="stat">
+          <span class="stat-label">Humidity</span>
+          <span class="stat-value">💧 ${data.main.humidity}%</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Wind</span>
+          <span class="stat-value">💨 ${data.wind.speed} m/s</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Range</span>
+          <span class="stat-value">↓${tempMin}° ↑${tempMax}°</span>
+        </div>
+      </div>
     `;
     showFavButton(true);
   } catch (e) {
