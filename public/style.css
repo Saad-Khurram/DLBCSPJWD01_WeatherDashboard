@@ -3,6 +3,10 @@
   box-sizing: border-box;
 }
 
+html {
+  overflow-x: clip; /* clip without creating a scroll container — fixes iOS scroll bug */
+}
+
 /* ---------- PAGE BACKGROUND & CENTERING ---------- */
 body {
   margin: 0;
@@ -13,7 +17,6 @@ body {
   font-family: "Poppins", sans-serif;
   color: #f5f5f5;
   background: #020617;
-  overflow-x: hidden;
 }
 
 /* Aurora background blobs */
@@ -350,8 +353,25 @@ body::after {
 /* ---------- RESPONSIVE ---------- */
 @media (max-width: 780px) {
   body {
-    align-items: flex-start; /* avoid too much top empty space */
+    align-items: flex-start;
     padding-top: 40px;
+    padding-bottom: 40px;
+  }
+
+  body::before {
+    width: 280px;
+    height: 280px;
+    top: -60px;
+    left: -60px;
+    animation: none; /* stop drift — animated translate causes horizontal overflow on mobile */
+  }
+
+  body::after {
+    width: 240px;
+    height: 240px;
+    bottom: -60px;
+    right: -50px;
+    animation: none;
   }
 
   .layout {
@@ -360,7 +380,34 @@ body::after {
 
   .app-title {
     text-align: center;
+    font-size: 24px;
     margin-bottom: 20px;
+  }
+
+  .card-temp-hero {
+    font-size: 52px;
+  }
+
+  .card-temp-unit {
+    font-size: 24px;
+  }
+
+  .card-stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .stat {
+    padding: 8px;
+  }
+
+  .stat-value {
+    font-size: 0.82rem;
+  }
+
+  .search input,
+  .search button {
+    font-size: 16px; /* prevents iOS auto-zoom on focus */
   }
 }
 
